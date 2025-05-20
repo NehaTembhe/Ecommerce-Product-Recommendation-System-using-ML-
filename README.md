@@ -145,8 +145,10 @@ This project implements an E-commerce product recommendation system leveraging m
 The recommendation system's performance is evaluated using standard metrics for recommendation systems, including accuracy, precision, recall, F1-score, Mean Absolute Error (MAE), and Root Mean Squared Error (RMSE), as detailed in the project reports. The implemented hybrid approach aims to leverage the strengths of both content-based and collaborative filtering to provide more effective and relevant recommendations.
 
 ## Project Demo Video
+<h3>Watch Demo Video Here 
+Link (https://drive.google.com/file/d/131l_vHf6t1L7Y1DXsM__fbKAeatVWy_d/view?usp=drive_link)
 
-<video width="640" height="360" controls>
-  <source src="{{ url_for('static', filename='image/demo.mp4') }}" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+
+
+## If you like this project, please give it a 🌟.
+## Thank you 😊.
