@@ -1,0 +1,216 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ecommerce Recommendation System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+    body {
+      font-family: "Roboto", sans-serif;
+      background-color: #f1f5f9;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="bg-black px-6 py-3">
+    <div class="max-w-7xl mx-auto flex items-center gap-1">
+      <span class="text-white font-extrabold italic text-xl select-none">RetailHub</span>
+      <div class="text-xs text-white flex items-center gap-1 font-semibold italic">
+        <span>Explore</span>
+
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-6 flex flex-col lg:flex-row gap-6">
+    <!-- Left section: Product & Delivery -->
+    <section class="flex-1 space-y-6">
+      <!-- Delivery Address -->
+      <div>
+  <div class="bg-black p-4 rounded-t-md">
+    <div class="text-white font-bold uppercase text-sm select-none flex items-center gap-2">
+      <div class="bg-[#e2e6ef] text-[#3b82f6] rounded-sm w-6 h-6 flex items-center justify-center text-xs font-semibold select-none">1</div>
+      DELIVERY ADDRESS
+    </div>
+  </div>
+  <div class="bg-white rounded-b-md divide-y divide-gray-200 border border-t-0 border-gray-200" id="address-container">
+    <!-- Add Address Button -->
+    <div class="p-4">
+      <button id="addAddressBtn" class="text-black font-semibold text-sm hover:underline">+ Add New Address</button>
+    </div>
+
+    <!-- Address Form (Initially Hidden) -->
+    <form id="addressForm" class="hidden p-4 space-y-3">
+      <input type="text" id="name" placeholder="Full Name" class="w-full border p-2 rounded text-sm" required />
+      <input type="text" id="phone" placeholder="Phone Number" class="w-full border p-2 rounded text-sm" required />
+      <textarea id="address" placeholder="Full Address" class="w-full border p-2 rounded text-sm" required></textarea>
+      <button type="submit" class="bg-black text-white text-sm px-4 py-2 rounded">Save Address</button>
+    </form>
+  </div>
+</div>
+
+      <!-- Payment Options -->
+      <div>
+        <div class="bg-black p-4 rounded-t-md">
+          <div class="text-white font-bold uppercase text-sm select-none flex items-center gap-2">
+            <div class="bg-[#e2e6ef] text-[#3b82f6] rounded-sm w-6 h-6 flex items-center justify-center text-xs font-semibold select-none">2</div>
+            PAYMENT OPTIONS
+          </div>
+        </div>
+        <div class="bg-white rounded-b-md border border-t-0 border-gray-200 p-6 space-y-4">
+          <div class="flex items-center gap-3">
+            <input type="radio" name="payment" id="card" class="text-black focus:ring-black border-gray-300" checked />
+            <label for="card" class="text-gray-900 font-semibold cursor-pointer select-none">Credit/Debit/ATM Card</label>
+          </div>
+          <div class="flex items-center gap-3">
+            <input type="radio" name="payment" id="upi" class="text-black focus:ring-black border-gray-300" />
+            <label for="upi" class="text-gray-900 font-semibold cursor-pointer select-none">UPI</label>
+          </div>
+          <div class="flex items-center gap-3">
+            <input type="radio" name="payment" id="netbanking" class="text-black focus:ring-black border-gray-300" />
+            <label for="netbanking" class="text-gray-900 font-semibold cursor-pointer select-none">Net Banking</label>
+          </div>
+          <div class="flex items-center gap-3">
+            <input type="radio" name="payment" id="cod" class="text-black focus:ring-black border-gray-300" />
+            <label for="cod" class="text-gray-900 font-semibold cursor-pointer select-none">Cash on Delivery</label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right section: Order Summary -->
+<aside class="w-full max-w-sm bg-white rounded-md shadow-sm border border-gray-200 divide-y divide-gray-200 select-text">
+  <div class="p-6">
+    <h2 class="text-gray-600 font-semibold text-sm uppercase mb-4 select-none">Order Summary</h2>
+
+    <!-- Price (1 item) -->
+    <div class="flex justify-between mb-3 text-gray-900 text-base">
+      <span>Price (1 item)</span>
+      <span>₹{{ product['Selling_Price'] }}</span>  <!-- Display the selling price dynamically -->
+    </div>
+
+    <!-- Delivery Charges -->
+    <div class="flex justify-between mb-3 text-base items-center">
+      <span>Delivery Charges</span>
+      <div class="flex items-center gap-2">
+        <span class="line-through text-gray-400 select-none">₹70</span>
+        <span class="text-green-600 font-semibold select-none">FREE</span>
+      </div>
+    </div>
+
+    <!-- Packaging Charge -->
+    <div class="flex justify-between mb-6 text-gray-900 text-base">
+      <span>Packaging Charge</span>
+      <span>₹69</span>
+    </div>
+
+    <!-- Total Payable -->
+    <div class="flex justify-between border-t border-dotted border-gray-300 pt-3 text-gray-900 font-extrabold text-lg">
+      <span>Total Payable</span>
+      <span>₹{{ product['Selling_Price'] + 69 }} </span> <!-- Total Payable with packaging charge -->
+    </div>
+
+    <!-- Savings -->
+    <p class="mt-4 text-green-700 font-semibold text-sm select-none">
+      Your Total Savings on this order ₹{{ (product['Original_Price'] - product['Selling_Price']) | round(2) }}
+    </p>
+  </div>
+
+
+      <div class="flex items-center gap-4 p-6 text-gray-500 text-sm">
+        <div class="flex items-center justify-center w-10 h-10 bg-gray-300 rounded-md shrink-0">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 text-gray-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        </div>
+        <p>
+          Safe and Secure Payments. Easy returns.<br />
+          100% Authentic products.
+        </p>
+      </div>
+      <div class="p-6">
+        <button
+          type="button"
+          class="w-full bg-[#fb641b] hover:bg-[#e55300] text-white font-semibold py-3 rounded-md text-lg transition"
+        >
+          PLACE ORDER
+        </button>
+      </div>
+    </aside>
+  </main>
+<script>
+  const addBtn = document.getElementById("addAddressBtn");
+  const form = document.getElementById("addressForm");
+  const container = document.getElementById("address-container");
+
+  addBtn.addEventListener("click", () => {
+    form.classList.toggle("hidden");
+  });
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const addressText = document.getElementById("address").value.trim();
+
+    if (!name || !phone || !addressText) return;
+
+    const label = document.createElement("label");
+    label.className = "flex items-start gap-3 p-4 cursor-pointer";
+
+    const radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = "address";
+    radio.className = "mt-1 text-black focus:ring-black border-gray-300";
+    radio.checked = true;
+
+    const div = document.createElement("div");
+    div.className = "flex flex-col text-gray-900 text-sm select-text";
+
+    const nameDiv = document.createElement("div");
+    nameDiv.className = "font-semibold flex items-center gap-2";
+    nameDiv.innerHTML = `
+      ${name}
+      <span class="bg-gray-300 text-gray-600 text-[10px] font-semibold uppercase rounded px-2 py-[2px] select-none">HOME</span>
+      <span>${phone}</span>
+    `;
+
+    const addressDiv = document.createElement("div");
+    addressDiv.className = "mt-1 max-w-[600px]";
+    addressDiv.textContent = addressText;
+
+    div.appendChild(nameDiv);
+    div.appendChild(addressDiv);
+
+    label.appendChild(radio);
+    label.appendChild(div);
+
+    container.insertBefore(label, form);
+
+    form.reset();
+    form.classList.add("hidden");
+  });
+</script>
+
+</body>
+</html>

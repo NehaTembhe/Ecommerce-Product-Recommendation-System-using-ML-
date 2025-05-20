@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RetailHub - My Cart</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    rel="stylesheet"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    /* General Body Styling */
+    body {
+      font-family: 'Poppins', sans-serif;
+      scroll-behavior: smooth;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Logo */
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    /* Browse Button */
+    .btn-browse {
+      background: linear-gradient(90deg, #007bff, #00c6ff);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 10px 25px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-browse:hover {
+      transform: scale(1.05);
+      background: linear-gradient(90deg, #0056b3, #0095d9);
+      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+    }
+
+    /* Header */
+    .bg-dark {
+      background-color: #343a40;
+    }
+
+    .text-white {
+      color: #fff;
+    }
+
+    .py-3 {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .d-flex {
+      display: flex;
+    }
+
+    .justify-content-between {
+      justify-content: space-between;
+    }
+
+    .align-items-center {
+      align-items: center;
+    }
+
+    /* Navigation */
+    .nav {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+    }
+
+    .nav-item {
+      margin-left: 1.5rem;
+    }
+
+    .nav-link {
+      color: #fff;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      transition: color 0.2s ease;
+    }
+
+    .nav-link i {
+      margin-right: 0.5rem;
+    }
+
+    .nav-link:hover {
+      color: #00c6ff;
+      text-decoration: underline;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: #ffffff;
+      padding: 25px;
+      width: 250px;
+      box-shadow: 2px 0 15px rgba(0, 0, 0, 0.05);
+      position: absolute;
+      flex-direction: column;
+      border-radius: 0 10px 10px 0;
+      z-index: 10;
+    }
+
+    .sidebar h5 {
+      font-weight: bold;
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+
+    .menu-title,
+    .menu-item {
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      color: #333;
+      padding: 10px 0;
+      cursor: pointer;
+    }
+
+    .menu-title i,
+    .menu-item i {
+      margin-right: 12px;
+      color: #007bff;
+    }
+
+    .menu-list {
+      list-style: none;
+      padding-left: 20px;
+      margin-top: 5px;
+    }
+
+    .menu-list li {
+      padding: 8px 0;
+      display: flex;
+      align-items: center;
+      color: #555;
+      font-size: 14px;
+      transition: color 0.2s ease;
+    }
+
+    .menu-list li:hover {
+      color: #007bff;
+    }
+
+    .menu-list li i {
+      margin-right: 8px;
+      color: #00aaff;
+    }
+
+    .arrow {
+      margin-left: auto;
+      color: gray;
+    }
+
+    .amount {
+      margin-left: auto;
+      color: green;
+      font-weight: bold;
+    }
+
+    .greeting {
+      margin: 0;
+      color: #666;
+    }
+
+    .user-name {
+      margin: 0;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .profile-card {
+      display: flex;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 20px;
+    }
+
+    .profile-card i {
+      margin-right: 15px;
+    }
+
+    .profile-info {
+      flex-grow: 1;
+    }
+
+    /* Cart Section */
+    .cart-container {
+      margin-left: 270px; /* Adjusted margin to accommodate fixed sidebar */
+      padding: 30px;
+      overflow-y: auto;
+      background-color: #f9f9f9; /* Ensure background matches body */
+      min-height: 100vh; /* Ensure full viewport height */
+    }
+
+    .cart-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .cart-item {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      border: 1px solid #eee;
+    }
+
+    .cart-item img {
+      width: 100px;
+      height: 120px;
+      object-fit: contain;
+      border-radius: 4px;
+      margin-right: 15px;
+    }
+
+    .product-info {
+      flex-grow: 1;
+    }
+
+    .product-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 5px;
+    }
+
+    .product-price,
+    .product-qty,
+    .product-total {
+      font-size: 16px;
+      font-weight: bold;
+      color: #28a745;
+      margin-right: 15px;
+    }
+
+    .remove-btn {
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: color 0.2s ease;
+      margin-left: 15px;
+    }
+
+    .remove-btn:hover {
+      color: #dc3545;
+    }
+
+    /* Responsive (optional) */
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        top: 60px; /* Adjust top to be below the header */
+        left: 0;
+        width: 100%;
+        height: auto;
+        z-index: 1000; /* Ensure it's above other content */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 0;
+      }
+      .cart-container {
+        margin-left: 0;
+        padding: 80px 15px 20px; /* Adjust top padding for header & sidebar */
+      }
+      .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .cart-item img {
+        margin-bottom: 10px;
+        width: 80px;
+        height: 100px;
+      }
+      .remove-btn {
+        margin-left: 0;
+        margin-top: 10px;
+      }
+    }
+    .wishlist-link {
+  text-decoration: none;
+  color: #333; /* Set desired color */
+  font-weight: bold;
+}
+  </style>
+</head>
+<body>
+  <header class="bg-dark text-white py-3">
+    <div class="container d-flex justify-content-between align-items-center">
+      <h1 class="logo">RetailHub</h1>
+      <nav>
+        <ul class="nav">
+          <li class="nav-item">
+            <a href="/cart" class="nav-link text-white"
+              ><i class="fa fa-shopping-cart"></i> Cart</a
+            >
+          </li>
+          {% if username %}
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle text-white"
+              href="#"
+              id="accountDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              {{ username }} <i class="fa fa-user"></i>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+              <li><a class="dropdown-item" href="/profile">My Profile</a></li>
+              <li><a class="dropdown-item" href="/supercoin">SuperCoin Zone</a></li>
+              <li><a class="dropdown-item" href="/orders">Orders</a></li>
+              <li><a class="dropdown-item" href="/wishlist">Wishlist</a></li>
+              <li><a class="dropdown-item" href="/coupons">Coupons</a></li>
+              <li><a class="dropdown-item" href="/gift-cards">Gift Cards</a></li>
+              <li><a class="dropdown-item" href="/notifications">Notifications</a></li>
+              <li><a class="dropdown-item" href="/logout">Logout</a></li>
+            </ul>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a href="/signin" class="nav-link text-white"
+              ><i class="fa fa-sign-in-alt"></i> Sign In</a
+            >
+          </li>
+          <li class="nav-item">
+            <a href="/signup" class="nav-link text-white"
+              ><i class="fa fa-user-plus"></i> Sign Up</a
+            >
+          </li>
+          {% endif %}
+          <li class="nav-item">
+            <a href="{{ url_for('main') }}" class="btn btn-browse"
+              ><i class="fas fa-search"></i> Browse More Products</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="sidebar">
+    <div class="profile-card">
+      <i class="fas fa-user-circle fa-3x" style="color: #007bff;"></i>
+      <div class="profile-info">
+        <p class="greeting">Hello,</p>
+        <h5 class="user-name">
+          {% if username %}
+          {{ username }}
+          {% else %}
+          Guest
+          {% endif %}
+        </h5>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <i class="fas fa-home"></i>
+      <span>MY ORDERS</span>
+      <i class="fas fa-chevron-right arrow"></i>
+    </div>
+
+    <div class="menu-title"><i class="fas fa-user"></i> ACCOUNT SETTINGS</div>
+    <ul class="menu-list">
+      <li><i class="fas fa-user-circle"></i> Profile Information</li>
+      <li><i class="fas fa-map-marker-alt"></i> Manage Addresses</li>
+      <li><i class="fas fa-id-card"></i> PAN Card Information</li>
+    </ul>
+
+    <div class="menu-title"><i class="fas fa-wallet"></i> PAYMENTS</div>
+    <ul class="menu-list">
+      <li><i class="fas fa-gift"></i> Gift Cards <span class="amount">₹0</span></li>
+      <li><i class="fas fa-university"></i> Saved UPI</li>
+      <li><i class="fas fa-credit-card"></i> Saved Cards</li>
+    </ul>
+    <div class="menu-title"><i class="fas fa-box"></i> MY STUFF</div>
+    <ul class="menu-list">
+      <li><i class="fas fa-ticket-alt"></i> My Coupons</li>
+      <li><i class="fas fa-star"></i> My Reviews & Ratings</li>
+      <li><i class="fas fa-bell"></i> All Notifications</li>
+     <li>
+  <a href="/wishlist" class="wishlist-link">
+    <i class="fas fa-heart"></i> My Wishlist
+  </a>
+</li>
+    </ul>
+    <div class="logout"><i class="fas fa-sign-out-alt"></i> Logout</div>
+  </div>
+
+  <div class="cart-container">
+    <h3 class="cart-title"
+      >My Cart (<span id="cart-count">{{ cart|length }}</span>)</h3
+    >
+    <div id="cart-items">
+    {% if cart %}
+        <div id="cart">
+            {% for item in cart %}
+                <a href="{{ url_for('product_detail', product_id=item.id) }}">
+                    <div class="cart-item">
+                        <img src="{{ item.image_url }}" alt="{{ item.name }}">
+                        <div class="product-info">
+                            <div class="product-name">{{ item.name }}</div>
+                            <div>
+                                <span class="product-price">₹{{ item.price }}</span>
+                                {% if item.old_price %}
+                                    <span class="product-old-price">₹{{ item.old_price }}</span>
+                                {% endif %}
+                                {% if item.discount %}
+                                    <span class="discount">{{ item.discount }}% off</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted">Your cart is empty.</p>
+    {% endif %}
+</div>
+
+  </div>
+
+  <script>
+    // Load cart from backend JSON API
+    async function loadCart() {
+      const container = document.getElementById('cart-items');
+      const count = document.getElementById('cart-count');
+
+      // Clear existing content
+      container.innerHTML = '';
+      count.textContent = '0';
+
+      try {
+        const response = await fetch('/api/cart', {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Unexpected response status: ${response.status}`);
+        }
+
+        const cart = await response.json();
+        count.textContent = cart.length;
+
+        if (!Array.isArray(cart) || cart.length === 0) {
+          container.innerHTML = "<p class='text-muted'>Your cart is empty.</p>";
+          return;
+        }
+
+        cart.forEach((product) => {
+          const {
+            product_id,
+            product_name,
+            image,
+            quantity,
+            discounted_price,
+            original_price,
+            discount,
+          } = product;
+
+          const totalPrice = discounted_price * quantity;
+
+          const priceHTML =
+            original_price && original_price > discounted_price
+              ? `
+              <span class="product-price">₹${discounted_price}</span>
+              <span class="product-old-price" style="text-decoration: line-through; margin-left: 5px;">₹${original_price}</span>
+              <span class="discount text-danger" style="margin-left: 5px;">(${discount}% OFF)</span>
+              `
+              : `<span class="product-price">₹${discounted_price}</span>`;
+
+          const cartItem = document.createElement('div');
+          cartItem.className = 'cart-item';
+
+          cartItem.innerHTML = `
+            <img src="${image}" alt="${product_name}" class="cart-img" />
+            <div class="product-info">
+              <p class="product-name">${product_name}</p>
+              <div>
+                ${priceHTML}
+                <span class="product-qty" style="margin-left: 15px;">Qty: ${quantity}</span>
+                <span class="product-total" style="margin-left: 15px; font-weight: bold; color: #198754;">Total: ₹${totalPrice.toFixed(
+                  2
+                )}</span>
+              </div>
+            </div>
+            <button
+              class="remove-btn"
+              aria-label="Remove from cart"
+              onclick="removeFromCart('${product_id}')"
+            >
+              <i class="fas fa-trash"></i>
+            </button>
+          `;
+
+          container.appendChild(cartItem);
+        });
+      } catch (error) {
+        console.error('Failed to load cart:', error);
+        container.innerHTML =
+          "<p class='text-danger'>Failed to load cart. Try again later.</p>";
+      }
+    }
+
+    // Remove a product from the cart
+    async function removeFromCart(productId) {
+      const confirmDelete = confirm(
+        'Are you sure you want to remove this item from your cart?'
+      );
+      if (!confirmDelete) return;
+
+      try {
+        const response = await fetch('/remove_from_cart', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ product_id: productId }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          console.log('Removed successfully:', data.message);
+          loadCart();
+        } else {
+          console.error('Failed to remove:', data.message);
+          alert('Failed to remove item: ' + data.message);
+        }
+      } catch (error) {
+        console.error('Error removing item:', error);
+        alert('An error occurred. Please try again later.');
+      }
+    }
+
+    // Load cart on page load
+    window.addEventListener('DOMContentLoaded', loadCart);
+
+    document.querySelector(".logout").addEventListener("click", function () {
+    window.location.href = "/logout";  // Redirect to logout URL
+  });
+
+  </script>
+</body>
+</html>
+

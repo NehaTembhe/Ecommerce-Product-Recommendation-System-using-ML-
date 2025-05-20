@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecommerce Recommendation System </title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background-color: #f4f4f4;
+    }
+
+    /* Top Header Styles */
+    .top-header {
+        background-color: #212121; /* Dark background */
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #fff; /* Default text color for header items */
+    }
+
+    .logo {
+        font-size: 1.8em;
+        font-weight: bold;
+        color: #fff;
+    }
+
+    .search-bar {
+        display: flex;
+        border: 1px solid #616161;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .search-input {
+        padding: 10px;
+        border: none;
+        outline: none;
+        width: 300px;
+        background-color: #424242;
+        color: #fff;
+    }
+
+    .search-input::placeholder {
+        color: #9e9e9e;
+    }
+
+    .search-button {
+        background-color: #ff9f00;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+    }
+
+    /* User Menu and Dropdown Styles */
+    .user-menu {
+        position: relative; /* To contain the absolute positioned dropdown */
+    }
+
+    .user-actions a {
+        text-decoration: none;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 5px; /* Space between text and arrow */
+        cursor: pointer; /* Indicate it's clickable */
+    }
+
+    .dropdown-menu {
+        position: absolute;
+        top: 100%; /* Position below the trigger */
+        right: 0; /* Align to the right of the trigger */
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 10; /* Ensure it's above other elements */
+        display: none; /* Initially hidden */
+        min-width: 200px; /* Adjust as needed */
+    }
+
+    .dropdown-menu a {
+        display: block;
+        padding: 10px 15px;
+        text-decoration: none;
+        color: #212121 !important; /* ENSURE THIS LINE LOOKS EXACTLY LIKE THIS */
+        transition: background-color 0.3s ease;
+        white-space: nowrap;
+    }
+
+    .dropdown-menu a:hover {
+        background-color: #f4f4f4;
+    }
+
+    .dropdown-menu .icon {
+        margin-right: 8px;
+        color: #777; /* Style the icons */
+    }
+
+    .dropdown-menu .badge {
+        background-color: #f0f0f0;
+        color: #333;
+        border-radius: 8px;
+        padding: 2px 5px;
+        font-size: 0.8em;
+        margin-left: 5px;
+    }
+
+    /* More Menu and Dropdown Styles (Similar to User Menu) */
+    .more-menu {
+        position: relative;
+    }
+
+    .more-actions a {
+        text-decoration: none;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        cursor: pointer; /* Indicate it's clickable */
+    }
+
+    .more-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0; /* Adjust if needed for alignment */
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+        display: none; /* Initially hidden */
+        min-width: 220px; /* Adjust as needed */
+    }
+
+    .more-dropdown a {
+        display: block;
+        padding: 10px 15px;
+        text-decoration: none;
+        color: #212121 !important; /* ALSO ENSURE THIS LINE LOOKS EXACTLY LIKE THIS */
+        transition: background-color 0.3s ease;
+        white-space: nowrap;
+    }
+
+    .more-dropdown a:hover {
+        background-color: #f4f4f4;
+    }
+
+    .more-dropdown .icon {
+        margin-right: 8px;
+        color: #777;
+    }
+
+    /* Other header links */
+    .top-header a {
+        color: #fff;
+        text-decoration: none;
+        margin-left: 20px;
+    }
+
+    .top-header a:hover {
+        text-decoration: underline;
+    }
+
+    /* Basic styling for the second header (if you intend to use it) */
+    .second-header {
+        background-color: #fff;
+        border-bottom: 1px solid #ddd;
+        padding: 10px 20px;
+        display: flex;
+        gap: 40px; /* Increased the gap value */
+        align-items: center;
+    }
+
+    .second-header a {
+        text-decoration: none;
+        color: #212121;
+        font-size: 0.9em;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+
+    .second-header a:hover {
+        color: #2874f0;
+    }
+
+    .container {
+        display: flex;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin: 20px;
+    }
+
+    .image-gallery {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+        position: relative; /* Make sure the image gallery is a positioning context */
+    }
+
+    .main-image-container {
+        flex: 1;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .main-image {
+        width: 100%;
+        max-width: 600px;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        margin-left: 20px;
+    }
+    .thumbnail {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        cursor: pointer;
+        object-fit: cover;
+    }
+
+    .thumbnail.active {
+        border-color: #ff9f00;
+    }
+
+    .product-details {
+        flex: 1;
+        padding: 20px;
+    }
+
+    .product-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .breadcrumb {
+        color: #777;
+        font-size: 0.9em;
+        margin-bottom: 10px;
+    }
+
+    .breadcrumb a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .breadcrumb span {
+        margin: 0 5px;
+    }
+.share-icon {
+    color: #6c757d;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: color 0.3s ease-in-out;
+}
+
+.share-icon:hover {
+    color: #343a40;
+}
+
+.product-title {
+    font-size: 1.5em; /* More moderate size */
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #343a40;
+}
+
+.price-container { /* Group price elements */
+    display: flex;
+    align-items: baseline; /* Align prices vertically */
+    margin-bottom: 10px;
+}
+
+.price {
+    font-size: 1.6em; /* Larger selling price */
+    color: #28a745;
+    margin-right: 10px;
+}
+
+.original-price {
+    color: #6c757d;
+    text-decoration: line-through;
+    font-size: 1em;
+}
+    .discount {
+    color: #ffc107; /* A warmer discount color */
+    font-size: 1em;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.rating {
+    color: #ffc107;
+    margin-bottom: 20px;
+    font-size: 1em;
+}
+
+   .size-selector {
+    margin-bottom: 20px;
+}
+
+.size-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #495057;
+}
+
+.size-select {
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    width: 120px; /* Slightly wider select box */
+    font-size: 1em;
+    appearance: none; /* Remove default arrow for custom styling */
+    background-image: url('data:image/svg+xml;utf8,<svg fill="#343a40" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position-x: 100%;
+    background-position-y: 5px;
+    cursor: pointer;
+}
+
+
+  .coupons {
+    margin-bottom: 20px;
+    color: #28a745; /* Highlight coupons */
+    font-size: 1em;
+}
+
+.coupons strong {
+    font-weight: bold;
+    color: #1e7e34;
+}
+
+    .available-offers {
+    margin-bottom: 25px;
+    color: #495057;
+    font-size: 1em;
+}
+
+.available-offers strong {
+    font-weight: bold;
+    color: #343a40;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.available-offers ul {
+    padding-left: 20px;
+    list-style-type: disc;
+}
+
+.available-offers li {
+    margin-bottom: 8px;
+}
+
+    .actions {
+    display: flex;
+    gap: 15px;
+}
+
+.add-to-cart, .buy-now {
+    padding: 12px 25px;
+    font-size: 1.1em;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.add-to-cart {
+    background-color: #ffc107; /* Warmer yellow */
+    color: #212529; /* Dark text for better contrast */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.add-to-cart:hover {
+    background-color: #e0a800;
+    transform: translateY(-2px); /* Subtle lift on hover */
+}
+
+.buy-now {
+    background-color: #28a745;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.buy-now:hover {
+    background-color: #218838;
+    transform: translateY(-2px); /* Subtle lift on hover */
+}
+    /* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Stack image and details on smaller screens */
+        margin: 15px;
+    }
+
+    .image-gallery {
+        flex: 0 0 auto;
+        border-right: none;
+        border-bottom: 1px solid #eee;
+        padding: 15px;
+    }
+
+    .main-image {
+        max-width: 100%;
+    }
+
+    .product-details {
+        padding: 20px;
+    }
+
+    .actions {
+        flex-direction: column; /* Stack buttons on smaller screens */
+        gap: 10px;
+    }
+
+    .add-to-cart, .buy-now {
+        width: 100%;
+    }
+}
+
+        /* Like Button Styling */
+.like-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-radius: 50%;
+    padding: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    z-index: 10; /* Ensures the button is above the product card */
+}
+
+.like-button:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+}
+
+.like-button i {
+    color: #ff5a5f; /* Red color for like icon (default) */
+    font-size: 1.5rem;
+}
+
+.like-button.active i {
+    color: #ff69b4; /* Pink color when the button is active */
+}
+
+
+.text-gold {
+    color: #FFD700; /* Golden color */
+}
+.reviews-qa-section {
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin: 20px;
+    }
+
+    .section-title {
+        font-size: 1.3em;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 10px;
+    }
+
+
+    /* Styles for the Reviews and Q&A Section */
+    .reviews-qa-section {
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin: 20px;
+    }
+
+    .section-title {
+        font-size: 1.3em;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 10px;
+    }
+
+    /* Review Submission Form */
+    .review-form {
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .review-form label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #555;
+    }
+
+    .review-form textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-family: inherit;
+        font-size: inherit;
+    }
+
+    .review-form .rating-input {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .review-form .rating-input label {
+        margin-right: 10px;
+    }
+
+    .review-form .star {
+        font-size: 1.5em;
+        color: #ccc;
+        cursor: pointer;
+        margin-right: 5px;
+    }
+
+    .review-form .star.active {
+        color: #ffc107;
+    }
+
+    .review-form button {
+        background-color: #ff8c00;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: background-color 0.3s ease;
+    }
+
+    .review-form button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Question and Answer Section */
+    .qa-form {
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .qa-form label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #555;
+    }
+
+    .qa-form input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-family: inherit;
+        font-size: inherit;
+    }
+
+    .qa-form button {
+        background-color: #ff8c00;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: background-color 0.3s ease;
+    }
+
+    .qa-form button:hover {
+        background-color: #1e7e34;
+    }
+
+    .ask-question-link {
+        display: block;
+        margin-top: 10px;
+        color: #007bff;
+        text-decoration: none;
+        font-size: 0.9em;
+    }
+
+    .ask-question-link:hover {
+        text-decoration: underline;
+    }
+  /* Container holding all features */
+.feature-container {
+    display: flex; /* Arrange items in a row */
+    flex-direction: row; /* Ensure they stay in a row */
+    justify-content: space-between; /* Distribute space evenly */
+    align-items: center; /* Align items properly */
+    flex-wrap: nowrap; /* Prevent wrapping */
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    width: 92%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Individual feature cards */
+.feature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 30%; /* Ensure equal width distribution */
+    padding: 15px;
+    text-align: center;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Hover effect */
+.feature:hover {
+    transform: translateY(-5px);
+}
+
+/* Circular icon styling */
+.feature-icon {
+    width: 70px;
+    height: 70px;
+    background-color:  #ff8c00; /* Yellow background */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Font Awesome icon styling */
+.feature-icon i {
+    font-size: 32px; /* Adjust icon size */
+    color: #333; /* Icon color */
+}
+
+/* Feature text */
+.feature-title {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #333;
+}
+
+.feature-subtitle {
+    font-size: 0.9em;
+    color: gray;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .feature-container {
+        flex-direction: column; /* Stack them vertically on smaller screens */
+        gap: 15px;
+    }
+    .feature {
+        width: 80%;
+    }
+}
+
+ .interested-section {
+    margin-top: 40px;
+    margin-bottom: 60px;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    width: 92%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.interested-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 8px;
+}
+
+.product-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 20px;
+    position: relative;
+    padding-right: 60px;
+}
+
+.product-grid::-webkit-scrollbar {
+    height: 6px;
+}
+.product-grid::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 8px;
+}
+.product-grid::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.product-card {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    width: 220px;
+    margin-right: 15px;
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.2s ease-in-out;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+}
+
+.product-card img {
+    width: 100%; /* Ensures images take the full width of the card */
+    height: 160px; /* Set a fixed height */
+    object-fit: contain; /* Ensures images fill the space while maintaining aspect ratio */
+    margin-bottom: 10px;
+    border-radius: 8px;
+    object-position: center;
+}
+
+.product-card h3 {
+    font-size: 0.95em;
+    font-weight: 600;
+    color: #333;
+    margin: 8px 0;
+    height: 2.4em; /* This, combined with line-height, determines the visible height */
+    overflow: hidden; /* Hides any text that overflows the element's box */
+    line-height: 1.2em; /* Sets the line height, important for calculating visible lines */
+    text-overflow: ellipsis; /* This is what adds the "..." for overflow */
+}
+
+.product-card p {
+    font-size: 0.85em;
+    color: #ff5722;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.product-card button {
+    background-color: #ff8c00;
+    color: #fff;
+    padding: 8px 14px;
+    font-size: 0.85em;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.product-card button:hover {
+    background-color: #e07000;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    .product-card {
+        width: 160px;
+    }
+    .product-card img {
+    height: 120px; /* Smaller image height for mobile screens */
+}
+    .product-card h3 {
+        font-size: 0.8em;
+    }
+}
+
+
+/* CSS for the scroll buttons */
+.scroll-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.7);
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.scroll-button:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.scroll-button.left {
+    left: 10px;
+}
+
+.scroll-button.right {
+    right: 10px;
+}
+
+.scroll-button i {
+    font-size: 1.2em;
+    color: #333;
+}
+
+</style>
+</head>
+<body>
+<header class="top-header">
+    <div class="logo">RetailHub</div>
+    <div class="search-bar">
+        <input type="text" class="search-input" placeholder="Search for products, brands and more">
+        <button class="search-button">&#x1F50D;</button>
+    </div>
+<div class="user-menu">
+    <div class="user-actions">
+        {% if username %}
+            <a href="#" onclick="toggleDropdown()">{{ username }} &#9660;</a>
+        {% else %}
+            <a href="{{ url_for('signin') }}">Login</a>
+        {% endif %}
+    </div>
+    <div class="dropdown-menu">
+        {% if username %}
+            <a href="#">
+                <span class="icon">👤</span>
+                My Profile
+            </a>
+            <a href="#">
+                <span class="icon">⚡</span>
+                SuperCoin Zone
+            </a>
+            <a href="#">
+                <span class="icon">✨</span>
+                Flipkart Plus Zone
+            </a>
+            <a href="#">
+                <span class="icon">🛒</span>
+                Orders
+            </a>
+            <a href="/wishlist">
+                <span class="icon">❤️</span>
+                Wishlist
+                <span class="badge">125</span>
+            </a>
+            <a href="#">
+                <span class="icon">🎟️</span>
+                Coupons
+            </a>
+            <a href="#">
+                <span class="icon">🎁</span>
+                Gift Cards
+            </a>
+            <a href="#">
+                <span class="icon">🔔</span>
+                Notifications
+            </a>
+            <a href="/logout">
+                <span class="icon">⏻</span>
+                Logout
+            </a>
+        {% endif %}
+    </div>
+</div>
+    <a href="#">Return & Orders</a>
+<div class="more-menu">
+   <div class="more-actions">
+        <a href="#" onclick="toggleMoreDropdown()">More &#9660;</a>
+    </div>
+    <div class="more-dropdown">
+        <a href="#">
+            <span class="icon">🔔</span>
+            Notification Preferences
+        </a>
+        <a href="#">
+            <span class="icon">❓</span>
+            24x7 Customer Care
+        </a>
+        <a href="#">
+            <span class="icon">📈</span>
+            Advertise
+        </a>
+        <a href="#">
+            <span class="icon">⬇️</span>
+            Download App
+        </a>
+    </div>
+</div>
+   <a href="/cart"><span class="cart-icon">&#x1F6D2;</span> Cart</a>
+
+</header>
+
+<nav class="second-header">
+    <a href="#">Electronics</a>
+    <a href="#">Home & Furniture</a>
+    <a href="#">Fashion</a>
+    <a href="#">Jewelry</a>
+    <a href="#">Sports & Outdoors</a>
+    <a href="#">Clothing</a>
+    <a href="#">Beauty</a>
+    <a href="#">Baby</a>
+    <a href="#">Computers & Accessories</a>
+    <a href="#">Offer Zone</a>
+</nav>
+
+<div class="container">
+    <div class="image-gallery">
+        <img src="{{ product.Image_URL }}" alt="Product Image" class="main-image">
+        <button
+    class="like-button {% if liked %}active{% endif %}"
+    onclick="toggleLike(this)"
+    data-product-id="{{ product.Product_ID }}">
+    <i class="{% if liked %}fas{% else %}far{% endif %} fa-heart"></i>
+</button>
+
+    </div>
+  <div class="product-details">
+    <div class="product-header">
+        <div class="breadcrumb">
+            <a href="#"> Home </a> <span>&gt;</span>
+
+            {% if product.Category and product.Category != "Unknown" %}
+                <a href="/category/{{ product.Category | urlencode }}">{{ product.Category }}</a>
+                <span>&gt;</span>
+            {% endif %}
+
+            {% if product.Subcategories %}
+                {% for subcategory in product.Subcategories[:3] %}
+                    <a href="/subcategory/{{ subcategory | urlencode }}">{{ subcategory }}</a>
+                    {% if not loop.last %}
+                        <span>&gt;</span>
+                    {% endif %}
+                {% endfor %}
+
+                {% if product.Subcategories|length > 3 %}
+                    <span>...</span> <span>&gt;</span>
+                    <a href="/subcategory/{{ product.Subcategories[-1] | urlencode }}">{{ product.Subcategories[-1] }}</a>
+                {% endif %}
+            {% endif %}
+
+            <span>{{ product.Product_Name }}</span>
+        </div>
+
+            <div class="share-icon"><i class="fas fa-share-alt"></i></div>
+
+        </div>
+        <div class="product-title">{{ product.Product_Name }}</div>
+      <div class="price">
+    {% if product.Selling_Price %}
+        ${{ "%.2f"|format(product.Selling_Price) }}
+    {% else %}
+        <span class="not-available">Price Not Available</span>
+    {% endif %}
+    <span class="original-price">
+        {% if product.Original_Price %}
+            ${{ "%.2f"|format(product.Original_Price) }}
+        {% else %}
+            <span class="not-available">Original Price Not Available</span>
+        {% endif %}
+    </span>
+    <span class="discount">({{ product.Discount }}% OFF)</span>
+</div>
+
+      <div class="rating">
+    <span class="stars">{{ product.RatingStars }}</span> ({{ product.Ratings }})
+</div>
+        <div class="size-selector">
+            <label for="size" class="size-label">Size:</label>
+            <select id="size" class="size-select">
+                <option value="small">Small</option>
+                <option value="medium">Medium</option>
+                <option value="large">Large</option>
+            </select>
+        </div>
+
+
+        <div class="coupons">
+            <strong>Available Coupons:</strong> Use code <strong>DISCOUNT10</strong> for 10% off.
+        </div>
+        <div class="available-offers">
+            <strong>Available Offers:</strong>
+            <ul>
+                <li>Free Shipping on orders over $50</li>
+                <li>Buy 1 Get 1 Free on selected products</li>
+            </ul>
+        </div>
+       <div class="actions">
+    <!-- Add to Cart Button -->
+
+<button type="button" class="add-to-cart" data-product-id="{{ product.Product_ID }}">
+  Add to Cart
+</button>
+
+
+           <!-- Buy Now Button --><form action="{{ url_for('buy_now') }}" method="GET" style="display: inline;">
+    <input type="hidden" name="product_id" value="{{ product.Product_ID }}">
+    <button type="submit" class="buy-now">Buy Now</button>
+</form>
+
+
+</div>
+  </div>
+
+</div>
+<div class="reviews-qa-section">
+        <h2 class="section-title">Customer Reviews</h2>
+
+        <div class="review-form">
+            <h3>Submit a Review</h3>
+            <label for="rating">Rating:</label>
+            <div class="rating-input">
+                <span class="star" data-rating="1">&#9733;</span>
+                <span class="star" data-rating="2">&#9733;</span>
+                <span class="star" data-rating="3">&#9733;</span>
+                <span class="star" data-rating="4">&#9733;</span>
+                <span class="star" data-rating="5">&#9733;</span>
+                <input type="hidden" id="rating" name="rating" value="0">
+            </div>
+            <label for="review-text">Your Review:</label>
+            <textarea id="review-text" name="review-text" rows="5" placeholder="Write your review here"></textarea>
+            <button type="submit">Submit Review</button>
+        </div>
+
+        <div id="user-reviews-container"></div>
+
+    </div>
+
+    <div class="reviews-qa-section">
+        <h2 class="section-title">Questions & Answers</h2>
+
+        <div class="qa-form">
+            <h3>Ask a Question</h3>
+            <label for="question-text">Your Question:</label>
+            <input type="text" id="question-text" name="question-text" placeholder="Ask your question here">
+            <button type="submit">Submit Question</button>
+        </div>
+
+        <div id="questions-answers-container"></div>
+
+    </div>
+<div class="interested-section">
+    <h2 class="interested-title">You Might Be Interested In</h2>
+    <div class="product-grid" id="productGrid">
+        {% for rec in interested_products %}
+        <div class="product-card">
+            <img src="{{ rec.Image_URL }}" alt="{{ rec.Product_Name }}">
+            <h3>{{ rec.Product_Name }}</h3>
+            <p>₹{{ rec.Selling_Price }}</p>
+            <a href="/product/{{ rec.Product_ID }}"><button>Shop Now</button></a>
+        </div>
+        {% endfor %}
+
+        <button class="scroll-button left" onclick="scrollProducts(-1)">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="scroll-button right" onclick="scrollProducts(1)">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+</div>
+
+
+
+
+<div class="feature-container">
+        <div class="feature">
+            <div class="feature-icon">
+                <i class="fas fa-fire"></i> <!-- Trending icon -->
+            </div>
+            <div class="feature-title">Trending Styles</div>
+            <div class="feature-subtitle">from Top Brands</div>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">
+                <i class="fas fa-tag"></i> <!-- Price tag icon -->
+            </div>
+            <div class="feature-title">Best Prices</div>
+            <div class="feature-subtitle">on Top Products</div>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">
+                <i class="fas fa-check-circle"></i> <!-- Easy returns icon -->
+            </div>
+            <div class="feature-title">Easy Returns</div>
+            <div class="feature-subtitle">on every order</div>
+        </div>
+    </div>
+
+<script>
+ function toggleMoreDropdown() {
+        const moreDropdown = document.querySelector('.more-dropdown');
+        moreDropdown.style.display = moreDropdown.style.display === 'block' ? 'none' : 'block';
+    }
+    window.addEventListener('click', function(event) {
+        const moreDropdown = document.querySelector('.more-dropdown');
+        const moreActions = document.querySelector('.more-actions a'); // Targeting the anchor tag
+
+        if (moreDropdown && moreDropdown.style.display === 'block' && moreActions && !moreActions.contains(event.target) && !moreDropdown.contains(event.target)) {
+            moreDropdown.style.display = 'none';
+        }
+    });
+
+    function toggleDropdown() {
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    document.addEventListener('click', function(event) {
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+        const userActionsLink = document.querySelector('.user-actions a'); // Targeting the anchor tag
+
+        // Check if the dropdown is currently visible AND the click is outside both the toggle and the dropdown
+        if (dropdownMenu && dropdownMenu.style.display === 'block' && userActionsLink && !userActionsLink.contains(event.target) && !dropdownMenu.contains(event.target)) {
+            dropdownMenu.style.display = 'none';
+        }
+    });
+
+function toggleLike(button) {
+    console.log("Button clicked:", button);
+    const productId = button.getAttribute('data-product-id');
+    console.log("Product ID:", productId);
+    if (!productId) {
+        alert("Product ID is missing or invalid.");
+        return;
+    }
+
+    // Find the <i> icon element inside the button
+    const icon = button.querySelector('i');
+    if (!icon) {
+        console.warn("❌ No <i> element found inside like button.");
+        alert("Icon element is missing.");
+        return;
+    }
+
+    // Proceed with fetch to /toggle_like
+    fetch('/toggle_like', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ Product_ID: productId.trim() })
+    })
+    .then(response => {
+        if (!response.ok) {
+            console.error("❌ Server responded with status:", response.status);
+            throw new Error('Network error');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            const isLiked = data.liked;
+            button.classList.toggle('active', isLiked);
+            icon.classList.toggle('fas', isLiked);
+            icon.classList.toggle('far', !isLiked);
+            console.log(`✔️ Product ${isLiked ? 'liked' : 'unliked'} successfully.`);
+        } else {
+            alert("⚠️ Error: " + data.message);
+        }
+    })
+    .catch(error => {
+        console.error("❌ Error in toggleLike():", error);
+        alert("Something went wrong. Please try again.");
+    });
+}
+
+    const productGrid = document.getElementById('productGrid');
+const scrollInterval = 2000; // Adjust scroll speed (milliseconds)
+let scrollTimeout;
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const cartButtons = document.querySelectorAll(".add-to-cart");
+
+  cartButtons.forEach(button => {
+    button.addEventListener("click", function () {
+      const productId = this.dataset.productId;
+
+      fetch("/toggle_cart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          Product_ID: productId
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          if (data.in_cart) {
+            alert("✅ Product added to cart!");
+            this.textContent = "Remove from Cart";
+          } else {
+            alert("🗑️ Product removed from cart.");
+            this.textContent = "Add to Cart";
+          }
+        } else {
+          alert("⚠️ " + data.message);
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        alert("❌ Something went wrong.");
+      });
+    });
+  });
+});
+
+</script>
+
+</body>
+</html>
