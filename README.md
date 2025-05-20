@@ -128,7 +128,7 @@ This project implements an E-commerce product recommendation system leveraging m
     python app.py
     ```
 
-2.  **Access the web application:** Open your web browser and navigate to `http://127.0.0.1:5000/`.
+2.  **Access the web application:** Open your web browser and navigate to `http://127.0.0.1:5000`.
 
 3.  **Explore the features:**
 
@@ -137,7 +137,7 @@ This project implements an E-commerce product recommendation system leveraging m
     * 🔎**Search:** Use the search bar to look for specific products. The system will display relevant products and may also incorporate content-based recommendations based on your search query.
     * 🛍️**Product Interaction:** Clicking on products you are interested in helps the system learn your preferences for future recommendations.
     * 💖**Wishlist:** Add products to your personal wishlist by clicking the like button associated with a product. Access your saved items through the "Wishlist" link in the navigation.
-    * 🛒**(Potentially) Shopping Cart:** Look for options to add products to a shopping cart for potential purchase.
+    * 🛒**Shopping Cart:** Look for options to add products to a shopping cart for potential purchase.
 
 
 ## Evaluation
